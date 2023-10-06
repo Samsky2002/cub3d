@@ -2,7 +2,7 @@ CC = cc
 
 NAME = cub3d
 
-CFLAGS = -g -fsanitize=address #-Wall -Werror -Wextra
+CFLAGS = -g -fsanitize=address -O3#-Wall -Werror -Wextra
 
 CFILES = main.c \
 		 cub3d_utils.c \
@@ -13,6 +13,7 @@ CFILES = main.c \
 		 drawing_utils.c \
 		 dda.c \
 		 ray_casting.c \
+		 ray_utils.c
 
 OBJECTS = $(CFILES:.c=.o)
 

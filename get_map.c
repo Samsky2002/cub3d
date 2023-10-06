@@ -6,18 +6,20 @@
 /*   By: oakerkao <oakerkao@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/29 12:02:54 by oakerkao          #+#    #+#             */
-/*   Updated: 2023/09/29 12:03:11 by oakerkao         ###   ########.fr       */
+/*   Updated: 2023/10/06 11:45:46 by oakerkao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-t_list	*put_map(int fd)
+t_list	*put_map(char *file)
 {
 	char	*line;
+	int		fd;
 	t_list	*lst;
 
 	lst = NULL;
+	fd = open(file, O_RDONLY);
 	line = get_next_line(fd);
 	while(line)
 	{

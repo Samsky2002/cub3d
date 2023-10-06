@@ -1,27 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   map_check.c                                        :+:      :+:    :+:   */
+/*   ray_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: oakerkao <oakerkao@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/29 12:02:06 by oakerkao          #+#    #+#             */
-/*   Updated: 2023/10/06 11:58:13 by oakerkao         ###   ########.fr       */
+/*   Created: 2023/10/01 10:44:09 by oakerkao          #+#    #+#             */
+/*   Updated: 2023/10/01 13:03:46 by oakerkao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int check_player_on_wall(t_var *var, double x, double y) 
+t_ray	*new_ray(double wall_hit_x, double wall_hit_y, double distance)
 {
-	int	index_x;
-	int	index_y;
-	char	**arr;
+	t_ray	*new;
 
-	index_x = floor(x / TWOD_SIZE);
-	index_y = floor(y / TWOD_SIZE);
-	arr = put_twod_array(var->lst);
-	if (arr[index_y][index_x] == '1')	
-		return (1);
-	return (0);
+	new = malloc(sizeof(t_ray));
+	new->wall_hit_x = wall_hit_x;
+	new->wall_hit_y = wall_hit_y;
+	new->distance = distance;
+	new->next = NULL;
+	return (new);
+}
+
+void	add_ray(t_ray **ray, t_ray *new)
+{
+	t_ray	*head;
+
+	if (!*ray)
+	{
+		*ray = new;
+		return ;
+	}
+	head = *ray;
+	while (head->next)
+		head = head->next;
+	head->next = new;
 }

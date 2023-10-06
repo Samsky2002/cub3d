@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ray_casting.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oakerkao <oakerkao@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: oakerkao <oakerkao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/29 11:57:07 by oakerkao          #+#    #+#             */
-/*   Updated: 2023/09/30 17:54:45 by oakerkao         ###   ########.fr       */
+/*   Updated: 2023/10/06 19:46:17 by oakerkao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 double	normalize_angle(double angle)
 {
-	angle = fmod(angle, (2 * M_PI));
+	angle = remainder(angle, (2 * M_PI));
 	if (angle < 0)
 		angle = 2 * M_PI + angle;
 	return (angle);
@@ -22,21 +22,25 @@ double	normalize_angle(double angle)
 
 double	distance_between_points(double x1, double y1, double x2, double y2)
 {
-	return (sqrt((x2 - x1) * (x2 - x1), (y2 - y1) * (y2 - y1));
+	return (sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)));
 }
 
-void	ray_cast(t_var	*var, double angle)
+void	ray_cast(t_var	*var, double angle, t_ray *ray)
 {
-	double	x_intersec;
-	double	y_intersec;
-	double	x_step;
-	double	y_step;
-	double	down;
-	double	up;
-	double	right;
-	double	left;
-	double	next_x;
-	double	next_y;
+	float	x_intersec;
+	float	y_intersec;
+	float	x_step;
+	float	y_step;
+	int		down;
+	int		up;
+	int		right;
+	int		left;
+	float	next_x;
+	float	next_y;
+	int		found_horiz = 0;
+	float	horiz_wall_hit_x = 0;
+	float	horiz_wall_hit_y = 0;
+	float	horiz_distance = 0;
 
 	down = 0;
 	up = 0;
@@ -49,23 +53,22 @@ void	ray_cast(t_var	*var, double angle)
 		down = 1;
 	else
 		up = 1;
-	if (angle < M_PI / 2 || angle > 3 * M_PI / 2)
+	if (angle < M_PI * 0.5 || angle > 1.5 * M_PI)
 		right = 1;
 	else
 		left = 1;
+
 	// y and x intersec
-	y_intersec = floor(var->player_y / SIZE) * SIZE;
+	y_intersec = floor(var->player_y / TWOD_SIZE) * TWOD_SIZE;
 	if (down)
-		y_intersec += SIZE;
+		y_intersec += TWOD_SIZE;
 	x_intersec = var->player_x + (y_intersec - var->player_y) / tan(angle);
 
-	//DDA(var, var->player_x, var->player_y, x_intersec, y_intersec);
-	//return ;
 	// y and x step 
-	y_step = SIZE;
+	y_step = TWOD_SIZE;
 	if (up)
 		y_step *= -1;
-	x_step = SIZE / tan(angle);
+	x_step = TWOD_SIZE / tan(angle);
 	if (left && x_step > 0)
 		x_step *= -1;
 	else if (right && x_step < 0)
@@ -74,25 +77,19 @@ void	ray_cast(t_var	*var, double angle)
 	// next_x and next_y
 	next_x = x_intersec;
 	next_y = y_intersec;
-	if (up)
-		next_y--;
-	double	horiz_wall_hit_x = 0;
-	double	horiz_wall_hit_y = 0;
-	double	horiz_distance = 0;
-	while (next_x > 0 && next_x < SIZE * 10 && next_y > 0 && next_y < SIZE * 10)
+	while (next_x >= 0 && next_x <= var->map_width && next_y >= 0 && next_y <= var->map_height)
 	{
-		if (check_player_on_wall(var, next_x, next_y))
+		float	x_to_check = next_x;
+		float	y_to_check = next_y + (up ? -1 : 0);
+		if (check_player_on_wall(var, x_to_check, y_to_check))
 		{
+			found_horiz = 1;
 			horiz_wall_hit_x = next_x;
 			horiz_wall_hit_y = next_y;
 			break ;
 		}
-		else
-		{
-			next_x += x_step;
-			next_y += y_step;
-			i++;
-		}
+		next_x += x_step;
+		next_y += y_step;
 	}
 	/////////////////////////////////////////////////////////////////
 	//				end											   //
@@ -103,16 +100,16 @@ void	ray_cast(t_var	*var, double angle)
 	/////////////////////////////////////////////////////////////////
 	
 	//x and y intersec
-	x_intersec = floor(var->player_x / SIZE) * SIZE;
+	x_intersec = floor(var->player_x / TWOD_SIZE) * TWOD_SIZE;
 	if (right)
-		x_intersec += SIZE;
+		x_intersec += TWOD_SIZE;
 	y_intersec = var->player_y + (x_intersec - var->player_x) * tan(angle);
 
 	// x and y step
-	x_step = SIZE;
+	x_step = TWOD_SIZE;
 	if (left)
 		x_step *= -1;
-	y_step = SIZE * tan(angle);
+	y_step = TWOD_SIZE * tan(angle);
 	if (up && y_step > 0)
 		y_step *= -1;
 	else if (down && y_step < 0)
@@ -121,20 +118,18 @@ void	ray_cast(t_var	*var, double angle)
 	// next_x and next_y
 	next_x = x_intersec;
 	next_y = y_intersec;
-	if (left)
-		next_x--;
-	/////////////////////////////////////////////////////////////////
-	//				end											   //
-	/////////////////////////////////////////////////////////////////
-	double	vert_wall_hit_x = 0;
-	double	vert_wall_hit_y = 0;
-	double	vert_distance = 0;
+	float	vert_wall_hit_x = 0;
+	float	vert_wall_hit_y = 0;
+	int		found_vert = 0;
+	float	vert_distance = 0;
 
-
-	while (next_x > 0 && next_x < SIZE * 10 && next_y > 0 && next_y < SIZE * 10)
+	while (next_x >= 0 && next_x <= var->map_width && next_y >= 0 && next_y <= var->map_height)
 	{
-		if (check_player_on_wall(var, next_x, next_y))
+		float x_to_check = next_x + (left ? -1 : 0);
+		float y_to_check = next_y;
+		if (check_player_on_wall(var, x_to_check, y_to_check))
 		{
+			found_vert = 1;
 			vert_wall_hit_x = next_x;
 			vert_wall_hit_y = next_y;
 			break ;
@@ -143,39 +138,104 @@ void	ray_cast(t_var	*var, double angle)
 		{
 			next_x += x_step;
 			next_y += y_step;
-			i++;
 		}
 	}
+	/////////////////////////////////////////////////////////////////
+	//				end											   //
+	/////////////////////////////////////////////////////////////////
+	double	wall_hit_x;
+	double	wall_hit_y;
+	double	distance = 0;
 
-	if (horiz_wall_hit_x)
-	{
+
+	ray->was_vert = 0;
+	ray->was_horiz = 0;
+	if (found_horiz)
 		horiz_distance = distance_between_points(var->player_x, var->player_y, horiz_wall_hit_x, horiz_wall_hit_y);
-	}
 	else
-		horiz_distance = 10000;
-	if (vertical_wall_hit_x)
+		horiz_distance = 10000000;
+	if (found_vert)
+		vert_distance = distance_between_points(var->player_x, var->player_y, vert_wall_hit_x, vert_wall_hit_y);
+	else
+		vert_distance = 1000000;
+	if (horiz_distance >= vert_distance)
 	{
-		vert_distance = distance_between_points(var->player_x, var->player_y, horiz_wall_hit_x, horiz_wall_hit_y);
+		wall_hit_x = vert_wall_hit_x;
+		wall_hit_y = vert_wall_hit_y;
+		distance = vert_distance;
+		ray->was_vert = 1;
 	}
 	else
-		vert_distance = 10000;
+	{
+		wall_hit_x = horiz_wall_hit_x;
+		wall_hit_y = horiz_wall_hit_y;
+		distance = horiz_distance;
+		ray->was_horiz = 1;
+	}
+	ray->wall_hit_x = wall_hit_x;
+	ray->wall_hit_y = wall_hit_y;
+	ray->distance = distance;
+}
+
+void	render(t_var *var, int x, double angle, t_ray *ray)
+{
+	float	distance_proj_plane;
+	float	projected_wall_height;
+	float	prep_distance;
+	int		wall_stripe_height;
+	int		wall_top_pixel;
+	int		wall_bottom_pixel;
+	/*colors and shit*/
+	uint8_t	red;
+	uint8_t	green;
+	uint8_t	blue;
+	uint8_t	alpha;
+	int		pix;
+	int		texture_offset_x;
+	int		texture_offset_y;
+
+	prep_distance = ray->distance * cos(angle - var->rotation_angle);
+	distance_proj_plane = (WIDTH / 2) * tan(FOV / 2);
+	projected_wall_height = 2 * (TWOD_SIZE / prep_distance) * distance_proj_plane;
+	wall_stripe_height = (int)projected_wall_height;
+	wall_top_pixel = (HEIGHT / 2) - (wall_stripe_height / 2);
+	wall_top_pixel = wall_top_pixel < 0 ? 0 : wall_top_pixel;
+	wall_bottom_pixel = (HEIGHT / 2) + (wall_stripe_height / 2);
+	wall_bottom_pixel = wall_bottom_pixel > HEIGHT ? HEIGHT : wall_bottom_pixel;
+	int	y;
+	y = wall_top_pixel;
+	if (ray->was_vert)
+		texture_offset_x = (int)ray->wall_hit_y % TWOD_SIZE;
+	else
+		texture_offset_x = (int)ray->wall_hit_x % var->texture->width;
+	while (y < wall_bottom_pixel)
+	{
+		texture_offset_y = (y - wall_top_pixel) * ((float)var->texture->height / wall_stripe_height);
+		pix = (var->texture->width * texture_offset_y + texture_offset_x) * 4;
+		red = var->texture->pixels[pix];
+		green = var->texture->pixels[pix + 1];
+		blue = var->texture->pixels[pix + 2];
+		alpha = var->texture->pixels[pix + 3];
+		mlx_put_pixel(var->img, x, y, ft_pixel(red, green, blue, alpha));
+		y++;
+	}
+	//mlx_put_pixel(var->img, x, y, ft_pixel(215, 138, 118, 255));
 }
 
 void	cast_all_rays(t_var *var)
 {
-	t_ray	ray;
-	int	i;
+	int		i;
 	double	angle;
 
 	i = 0;
-	angle = var->rotation_angle - (FOV/ 2);
-	while (i < RAY_NUM)
+	angle = var->rotation_angle - (FOV / 2);
+	while (i < WIDTH)
 	{
 		angle = normalize_angle(angle);
-		ray_cast(var, angle);
-		//DDA(var, var->player_x, var->player_y, var->player_x + cos(angle) * 25, var->player_y + sin(angle) * 25);
-		//break ;
-		angle += (FOV / RAY_NUM);
+		ray_cast(var, angle, &var->ray[i]);
+		render(var, i, angle, &var->ray[i]);
+		DDA(var, var->player_x, var->player_y, var->ray[i].wall_hit_x, var->ray[i].wall_hit_y);
+		angle += (FOV / WIDTH);
 		i++;
 	 }
 }

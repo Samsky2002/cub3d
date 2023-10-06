@@ -6,7 +6,7 @@
 /*   By: oakerkao <oakerkao@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/29 11:58:05 by oakerkao          #+#    #+#             */
-/*   Updated: 2023/09/30 13:28:32 by oakerkao         ###   ########.fr       */
+/*   Updated: 2023/10/06 15:29:43 by oakerkao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,11 @@ void	draw_map(t_list *lst, mlx_image_t *img)
 		j = 0;
 		while (str[j])
 		{
-			a = i * SIZE;
-			while (a < (SIZE * i) + SIZE)
+			a = i * TWOD_SIZE;
+			while (a < (TWOD_SIZE * i) + TWOD_SIZE)
 			{
-				b = j * SIZE;
-				while (b < (SIZE * j) + SIZE)
+				b = j * TWOD_SIZE;
+				while (b < (TWOD_SIZE * j) + TWOD_SIZE)
 				{
 					if (str[j] == '1')
 						mlx_put_pixel(img, b, a, 0xFFFFFF);
@@ -74,22 +74,13 @@ void	draw_player(t_list *lst, mlx_image_t *img, t_var *var)
 {
 	int	i;
 	int	j;
-	int	a;
-	int	b;
 
 	i = var->player_x;
 	j = var->player_y;
-	a = 10 + j;
-	b = 10 + i;
-	/*while (j < a)
-	{
-		i = var->player_x;
-		while (i < b)
-		{
-			mlx_put_pixel(img, i, j, 0xFFFFFF);
-			i++;
-		}
-		j++;
-	}*/
 	mlx_put_pixel(img, i, j, 0xFFFFFF);
+}
+
+int32_t ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a)
+{
+    return (r << 24 | g << 16 | b << 8 | a);
 }
