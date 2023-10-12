@@ -6,7 +6,7 @@
 /*   By: oakerkao <oakerkao@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/29 11:54:37 by oakerkao          #+#    #+#             */
-/*   Updated: 2023/10/02 12:54:00 by oakerkao         ###   ########.fr       */
+/*   Updated: 2023/10/07 11:36:16 by oakerkao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int abs(int n) { return ((n > 0) ? n : (n * (-1))); }
 
 // DDA Function for line generation
-void DDA(t_var *var, int X0, int Y0, int X1, int Y1)
+void DDA(t_var *var, int X0, int Y0, int X1, int Y1, int color)
 {
     // calculate dx & dy
     int dx = X1 - X0;
@@ -33,7 +33,7 @@ void DDA(t_var *var, int X0, int Y0, int X1, int Y1)
     float Y = Y0;
     for (int i = 0; i <= steps; i++) {
 
-		mlx_put_pixel(var->img, round(X), round(Y), 0xABCDEF);
+		mlx_put_pixel(var->img, round(X), round(Y), color);
         X += Xinc; // increment in x at each step
         Y += Yinc; // increment in y at each step
     }
