@@ -6,7 +6,7 @@
 /*   By: oakerkao <oakerkao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 10:47:49 by oakerkao          #+#    #+#             */
-/*   Updated: 2023/10/12 12:47:11 by oakerkao         ###   ########.fr       */
+/*   Updated: 2023/10/14 12:45:13 by oakerkao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,48 @@
 # include <limits.h>
 # include "libft.h"
 # include "../MLX42/include/MLX42/MLX42.h"
-# define SIZE 64 
+# include "cub3d.h"
+# define SIZE 100 
 # define HEIGHT 748
 # define WIDTH 1024 
-# define FOV 60 * (M_PI / 180) 
+# define FOV 60 * (M_PI / 180)
+
+typedef struct s_color_c
+{
+    int c1;
+    int c2;
+    int c3;
+} t_color_c;
+
+typedef struct s_color_f
+{
+    int f1;
+    int f2;
+    int f3;
+} t_color_f;
+
+typedef struct s_parser
+{
+    t_list  *list;
+    t_list  *file;
+    char **map;
+    char *no;
+    char *so;
+    char *we;
+    char *ea;
+    int error;
+    t_color_c ccolor;
+    t_color_f fcolor;
+    int len_map;
+    char player;
+    int count;
+    int count_we;
+    int count_so;
+    int count_ea;
+    int count_no;
+    int incr;
+    int count_player;
+} t_parser;
 
 typedef struct s_ray
 {
@@ -44,6 +82,7 @@ typedef struct s_var
 	mlx_texture_t	*west;
 	t_ray			*ray;
 	t_list			*lst;
+	t_parser		parser;
 	char			**map;
 	double			fov;
 	int				test_x;
@@ -76,6 +115,14 @@ typedef struct s_var
 	double			y_to_check;
 	double			horiz_distance;
 	double			vert_distance;
+	int				texture_offset_x;
+	int				texture_offset_y;
+	int				wall_top_pixel;
+	int				wall_bottom_pixel;
+	float			prep_distance;
+	float			distance_proj_plane;
+	float			projected_wall_height;
+	float			wall_stripe_height;
 }	t_var;
 
 // main
@@ -131,4 +178,35 @@ void		render(t_var *var, int x, double angle);
 
 // textures
 void		get_textures(t_var *var);
+// oussama
+void	keyhook_utils(t_var *var);
+
+int check_file(char *str);
+void line_by_line(char *file, t_parser *parser);
+void map(t_parser *parser);
+void check_tab(t_parser *parser);
+void free_cub(t_parser *parser,int i);
+void initialize_value(t_parser *parser);
+void part_error();
+int check_file(char *str);
+int check_extension(char *str);
+void check_color_and_floor_digit(t_parser *parser);
+int check_wall(char *str);
+void check_another_chara(char *str);
+void check_file_line(t_parser *parser);
+void check_char(char *str, t_parser *parser);
+char *take_path(t_parser *parser, char *str);
+void check_rep_path(t_parser *parser);
+void take_color(t_parser *parser, char *str, char c);
+void take_string_color(t_parser *parser, char *str, char c);
+void char_to_int(t_parser *parser, char *str, char c, int j);
+void cieling_struct(t_parser *parser, char *str, char c, int j);
+void take_string_color(t_parser *parser, char *str, char c);
+void	take_color(t_parser *parser, char *str, char c);
+void	check_last_first_line(t_parser *parser);
+int	check_if_wall(char *str);
+int	check_char_map(char *str, t_parser *parser);
+void	parser(char *file, t_var *var);
+char    **put_twod_array(t_list *lst);
+char	*char_join(char *str, char c);
 #endif

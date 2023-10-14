@@ -6,7 +6,7 @@
 /*   By: oakerkao <oakerkao@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:56:49 by oakerkao          #+#    #+#             */
-/*   Updated: 2023/10/12 11:02:40 by oakerkao         ###   ########.fr       */
+/*   Updated: 2023/10/13 19:55:55 by oakerkao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ void	get_final_info(t_var *var)
 {
 	var->ray->was_vert = 0;
 	var->ray->was_horiz = 0;
+	double	test = distance_between_points(var->player_x, var->player_y, 15.0000, 23.000);
 	if (var->horiz_distance >= var->vert_distance)
 	{
 		var->ray->wall_hit_x = var->vert_wall_hit_x;

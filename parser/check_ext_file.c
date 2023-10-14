@@ -1,31 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   map_check.c                                        :+:      :+:    :+:   */
+/*   check_ext_file.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: oakerkao <oakerkao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/29 12:02:06 by oakerkao          #+#    #+#             */
-/*   Updated: 2023/10/12 19:01:40 by oakerkao         ###   ########.fr       */
+/*   Created: 2023/10/14 09:45:09 by asekkak           #+#    #+#             */
+/*   Updated: 2023/10/14 12:39:12 by oakerkao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int check_player_on_wall(t_var *var, double x, double y) 
+int	check_file(char *str)
 {
-	int	index_x;
-	int	index_y;
-	//char	**arr;
+	int	fd;
 
-	index_x = floor(x / SIZE);
-	index_y = floor(y / SIZE);
-	//arr = put_twod_array(var->lst);
-	if (!(index_y >= 0 && index_y < var->map_height / SIZE))	
-		return (1);
-	if (!(index_x >= 0 && index_x < ft_strlen(var->map[index_y])))
-		return (1);
-	if (var->map[index_y][index_x] == '1') 
-		return (1);
-	return (0);
+	fd = open(str, O_RDONLY);
+	if (fd == -1)
+	{
+		close(fd);
+		return (0);
+	}
+	close(fd);
+	return (1);
+}
+
+int	check_extension(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str && str[i])
+	{
+		if (str[i] == '.' && str[i + 1] == 'c' 
+			&& str[i + 2] == 'u'
+			&& str[i + 3] == 'b' && str[i + 4] == '\0')
+			return (0);
+		i++;
+	}
+	return (1);
 }

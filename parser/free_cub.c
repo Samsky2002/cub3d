@@ -1,59 +1,49 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.c                                           :+:      :+:    :+:   */
+/*   free_cub.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: oakerkao <oakerkao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/14 10:16:44 by asekkak           #+#    #+#             */
+/*   Created: 2023/10/14 09:55:25 by asekkak           #+#    #+#             */
 /*   Updated: 2023/10/14 12:39:12 by oakerkao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int	checked_file(char *ac)
+void	free_cub(t_parser *parser, int i)
 {
-	int	fd;
+	int	j;
 
-	fd = open(ac, O_RDONLY);
-	if (fd == -1)
-		return (0);
-	return (fd);
-}
-
-int	textures(t_parser *parser, char *file)
-{
-	if (checked_file(file) == 0)
-		return (0);
-	return (1);
-}
-
-t_parser	parts_parser(char *file)
-{
-	t_parser	parser;
-
-	initialize_value(&parser);
-	textures(&parser, file);
-	line_by_line(file, &parser);
-	map(&parser);
-	return (parser);
-}
-
-void	parser(char *file, t_var *var)
-{
-	t_parser	p;
-
-	if (check_extension(file) == 1)
-	{
+	j = 0;
+	if (i == 0)
 		printf("Error");
-		exit(0);
-	}
-	if (check_file(file) == 0)
+	if (parser->no)
+		free(parser->no);
+	if (parser->so)
+		free(parser->so);
+	if (parser->we)
+		free(parser->we);
+	if (parser->ea)
+		free(parser->ea);
+	if (parser->file)
+		ft_lstclear(&parser->file, free);
+	if (parser->map)
 	{
-		printf("Error");
-		exit(0);
+		while (parser->map[j])
+		{
+			free(parser->map[j]);
+			j++;
+		}
+		free(parser->map);
 	}
-	p = parts_parser(file);
-	var->parser = p;
+	exit(0);
+}
+
+void	part_error(void)
+{
+	
+	printf("Error\n");
+	exit(0);
 }

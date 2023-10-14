@@ -1,152 +1,129 @@
-#include "parser.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   map.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: oakerkao <oakerkao@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/10/14 09:58:30 by asekkak           #+#    #+#             */
+/*   Updated: 2023/10/14 12:39:12 by oakerkao         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-// void check_side_map(t_parser *parser)
-// {
-//     int i;
-//     int j;
-//     int x;
+#include "cub3d.h"
 
-//     i = 0;
-//      while (parser->len_map >= i)
-//     {
-//         j = 0;
-//          x = 0;
-//         while (parser->map[i][j] == ' ')
-//             j++;
-//         if (parser->map[i][j] == '0')
-//             parser->Error = 0;
-//         while(parser->map[i][j] != ' ' && parser->map[i][j] != '\n')
-//             j++;
-//         j--;
-
-//         printf("%c||\n",parser->map[i][j]);
-//         printf("%c", parser->map[i][j]);
-//         i++;
-//     }
-// }
-
-// void check_wall(t_parser *parser)
-// {
-//     // int i=0;
-//     int j;
-//     j = 0;
-//     while (parser->map[0][j])
-//     {
-//         if (parser->map[0][j] != '1' && parser->map[0][j] != '\n' && parser->map[0][j] != ' ')
-//             parser->Error = 0;
-//         j++;
-//     }
-//     j = 0;
-//     while (parser->map[parser->len_map][j])
-//     {
-//         if (parser->map[parser->len_map][j] != '1' && parser->map[parser->len_map][j] != '\n' && parser->map[parser->len_map][j] != ' ')
-//             parser->Error = 0;
-//         j++;
-//     }
-//     check_side_map(parser);
-// }
-
-// int check_map(t_parser *parser)
-// {
-//     int i;
-//     int j;
-
-//     i = 0;
-//     j = 0;
-
-//     // check_wall(parser);
-//     while (parser->len_map >= i)
-//     {
-//         j = 0;
-//         while (parser->map[i][j])
-//         {
-//             if (parser->map[i][j] != '\n' && parser->map[i][j] != 'N' && parser->map[i][j] != 'S' && parser->map[i][j] != 'W' && parser->map[i][j] != 'E' && parser->map[i][j] != '1' && parser->map[i][j] != '0' && parser->map[i][j] != ' ')
-//             {
-//                 parser->Error = 0;
-//                 return (0);
-//             }
-//             // else
-//             printf("%c", parser->map[i][j]);
-//             j++;
-//         }
-//         i++;
-//     }
-//     return (1);
-// }
-
-void check_map(t_parser *parser)
+void	check_map_part_1(t_parser *parser, int i, int j)
 {
-    int i = 0;
-    int j = 0;
-    char    **map;
-    
-    printf("test\n");
-    while (parser->map[i])
-    {
-        j = 0;
-        printf("%d   %d\n",i , parser->len_map);
-        while (parser->map[i][j])
-        {
-            if (parser->map[i][j] == '0')
-            {
-
-                if (parser->map[i][j + 1] == ' ' || parser->map[i][j + 1] == '\n' || parser->map[i][j + 1] == '\0' || parser->map[i][j - 1] == ' ' || parser->len_map == i || i == 0)
-                    parser->error = 0;
-            }
-            j++;
-        }
-        i++;
-    }
+	if (!((parser->map[i][j + 1] == '1' || parser->map[i][j + 1] == '0'
+		|| parser->map[i][j + 1] == 'N' || parser->map[i][j + 1] == 'S'
+			|| parser->map[i][j + 1] == 'E' || parser->map[i][j + 1] == 'W')
+			&& (parser->map[i][j - 1] == '1' || parser->map[i][j - 1] == '0'
+			|| parser->map[i][j - 1] == 'N' || parser->map[i][j - 1] == 'S'
+			|| parser->map[i][j - 1] == 'E' || parser->map[i][j - 1] == 'W')
+			&& (parser->map[i + 1][j] == '1' || parser->map[i + 1][j] == '0'
+			|| parser->map[i + 1][j] == 'N' || parser->map[i + 1][j] == 'S'
+			|| parser->map[i + 1][j] == 'E' || parser->map[i + 1][j] == 'W')
+			&& (parser->map[i - 1][j] == '1' || parser->map[i - 1][j] == '0'
+			|| parser->map[i - 1][j] == 'N' || parser->map[i - 1][j] == 'S'
+			|| parser->map[i - 1][j] == 'E' || parser->map[i - 1][j] == 'W')))
+		part_error();
 }
 
-
-int map(t_parser *parser, int fd)
+void	check_map(t_parser *parser)
 {
-    int i = 0;
-    char *str = malloc(1024 * 1024);
-    str = get_next_line(fd);
-    (void)parser;
-    while (1)
-    {
-        while (str[i] == ' ')
-            i++;
-        if (str[i] == '1' || str[i] == '0')
-            break;
-        else
-        {
-            str = get_next_line(fd);
-            i = -1;
-        }
-        i++;
-    }
-    // printf("%s\n",str);
-    while(ft_strchr(str, '1'))
-    {
-        ft_lstadd_back(&parser->list, ft_lstnew(str));
-        str = get_next_line(fd);
-        if (!str)
-            break ;
-    }
-    if (str && !ft_strchr(str, '1'))
-    {
-        printf("Error\n");
-        exit(0);
-    }
-    t_list  *tmp;
+	int		i;
+	int		j;
+	char	**map;
 
-    tmp = parser->list;
-    while (tmp->next)
-    {
-        tmp = tmp->next;
-    }
-    if (ft_strchr(tmp->content, '\n'))
-    {
-        printf("Error\n");
-        exit(0);
-    }
-    parser->map = put_twod_array(parser->list);
-    parser->len_map = ft_lstsize(parser->list) - 1;
-    // printf("len = %d\n", parser->len_map);
-    check_map(parser);
-    return (1);
+	i = 0;
+	check_last_first_line(parser);
+	while (parser->map[i])
+	{
+		j = 0;
+		while (parser->map[i][j])
+		{
+			if (parser->map[i][j] == '0')
+			{
+				if (parser->map[i][0] == '0')
+					part_error();
+				check_map_part_1(parser, i, j);
+			}
+			j++;
+		}
+		if (!check_char_map(parser->map[i], parser))
+			part_error();
+		i++;
+	}
+}
+
+void	check_map_if_empty_line(t_parser *parser)
+{
+	int	i;
+	int	k;
+	int	j;
+
+	i = 0;
+	j = 0;
+	k = 0;
+	while (parser->map[i])
+	{
+		j = 0;
+		while (parser->map[i] && parser->map[i][j] == ' ')
+			j++;
+		if (parser->map[i][j] == '\n')
+			part_error();
+		i++;
+	}
+	check_map(parser);
+	if (parser->count_player != 1)
+		part_error();
+}
+
+void	store_map(t_parser *parser, int i)
+{
+	t_list	*lst;
+	t_list	*tmp;
+	int		j;
+
+	lst = parser->file;
+	j = 0;
+	while (lst)
+	{
+		if (i <= j)
+			ft_lstadd_back(&parser->list, ft_lstnew(lst->content));
+		lst = lst->next;
+		j++;
+	}
+	tmp = parser->list;
+	while (tmp->next)
+	{
+		tmp = tmp->next;
+	}
+	if (ft_strchr(tmp->content, '\n'))
+		part_error();
+	parser->map = put_twod_array(parser->list);
+	check_map_if_empty_line(parser);
+	parser->len_map = ft_lstsize(parser->list) - 1;
+}
+
+void	map(t_parser *parser)
+{
+	t_list	*lst;
+	int		i;
+
+	i = 0;
+	lst = parser->file;
+	while (lst)
+	{
+		if (parser->incr < i)
+		{
+			if (!check_if_wall(lst->content))
+			{
+				store_map(parser, i);
+				break ;
+			}
+		}
+		lst = lst->next;
+		i++;
+	}
 }

@@ -2,12 +2,19 @@ CC = cc
 
 NAME = cub3D
 
-CFLAGS =  -g -fsanitize=address #-Wall -Werror -Wextra 
+CFLAGS =  -O3 -g -fsanitize=address #-Wall -Werror -Wextra 
 
 PARSER = parser/map.c \
-		 parser/map_list.c \
-		 parser/parser.c \
-		 parser/test.c
+ 		 parser/parser.c \
+		 parser/line_by_line.c \
+		 parser/check_tab.c \
+		 parser/free_cub.c \
+		 parser/initialize_values.c \
+		 parser/check_ext_file.c \
+		 parser/check_floor_ceiling.c \
+		 parser/check_line_by_line.c \
+		 parser/check_cara_without_map.c \
+		 parser/colors.c
 
 ENGINE = engine/cub3d_utils.c \
 		 engine/get_map.c \

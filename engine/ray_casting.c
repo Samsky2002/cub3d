@@ -6,7 +6,7 @@
 /*   By: oakerkao <oakerkao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/29 11:57:07 by oakerkao          #+#    #+#             */
-/*   Updated: 2023/10/12 11:00:42 by oakerkao         ###   ########.fr       */
+/*   Updated: 2023/10/12 19:02:02 by oakerkao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	ray_cast_horizontal(t_var *var, double angle)
 	var->found_horiz = 0;
 	var->horiz_wall_hit_x = 0;
 	var->horiz_wall_hit_y = 0;
-	init_ray_cast_vars(var);	
+	init_ray_cast_vars(var);
 	// y and x intersec
 	var->y_intersec = floor(var->player_y / SIZE) * SIZE;
 	if (var->down)
@@ -78,9 +78,6 @@ void	ray_cast_horizontal(t_var *var, double angle)
 
 void	ray_cast(t_var	*var, double angle)
 {
-	double	horiz_distance;
-	double	vert_distance;
-
 	ray_view(var, angle);
 	ray_cast_horizontal(var, angle);
 	ray_cast_vertical(var, angle);

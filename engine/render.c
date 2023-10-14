@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oakerkao <oakerkao@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: oakerkao <oakerkao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:54:48 by oakerkao          #+#    #+#             */
-/*   Updated: 2023/10/11 11:24:06 by oakerkao         ###   ########.fr       */
+/*   Updated: 2023/10/14 12:44:46 by oakerkao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,43 +28,67 @@ uint32_t	get_color(t_var *var, int pix)
 	return (color);
 }
 
+void	color_top(t_var *var, int x)
+{
+	int	y;
+
+	y = 0;
+	while (y < var->wall_top_pixel)
+	{
+		mlx_put_pixel(var->img, x, y, ft_pixel(var->parser.ccolor.c1, var->parser.ccolor.c2, var->parser.ccolor.c3, 255));
+		y++;
+	}
+
+}
+
+void	color_bottom(t_var *var, int x)
+{
+	int	y;
+
+	y = var->wall_bottom_pixel;
+	while (y < HEIGHT)
+	{
+		mlx_put_pixel(var->img, x, y, ft_pixel(var->parser.fcolor.f1, var->parser.fcolor.f2, var->parser.fcolor.f3, 255));
+		y++;
+	}
+
+}
+
+void	get_offset_x(t_var *var)
+{
+	if (var->ray->was_vert)
+		var->texture_offset_x = (int)var->ray->wall_hit_y % SIZE;
+	else
+		var->texture_offset_x = (int)var->ray->wall_hit_x % SIZE;
+}
+
 void	render(t_var *var, int x, double angle)
 {
-	float	distance_proj_plane;
-	float	projected_wall_height;
-	float	prep_distance;
-	float	wall_stripe_height;
-	int		wall_top_pixel;
-	int		wall_bottom_pixel;
-	/*colors and shit*/
 	int		pix;
-	int		texture_offset_x;
-	int		texture_offset_y;
 	int	distance_from_top = 0;
-
-	prep_distance = var->ray->distance * cos(angle - var->rotation_angle);
-	distance_proj_plane = (WIDTH / 2) * tan(FOV / 2);
-	projected_wall_height = (SIZE * 2 / prep_distance) * distance_proj_plane;
-	wall_stripe_height = (int)projected_wall_height;
-	wall_top_pixel = (HEIGHT / 2) - (wall_stripe_height / 2);
-	wall_top_pixel = wall_top_pixel < 0 ? 0 : wall_top_pixel;
-	wall_bottom_pixel = (HEIGHT / 2) + (wall_stripe_height / 2);
-	wall_bottom_pixel = wall_bottom_pixel > HEIGHT ? HEIGHT : wall_bottom_pixel;
 	int	y;
-	if (var->ray->was_vert)
-		texture_offset_x = (int)var->ray->wall_hit_y % SIZE;
-	else
-		texture_offset_x = (int)var->ray->wall_hit_x % SIZE;
-	y = wall_top_pixel;
-	while (y < wall_bottom_pixel)
+
+	var->ray->distance = var->ray->distance <= 0 ? 2 : var->ray->distance;
+	var->prep_distance = var->ray->distance * cos(var->rotation_angle - angle);
+	var->distance_proj_plane = (WIDTH / 2) * tan(FOV / 2);
+	var->projected_wall_height = (SIZE * 2 / var->prep_distance) * var->distance_proj_plane;
+	var->wall_stripe_height = (int)var->projected_wall_height;
+	var->wall_top_pixel = (HEIGHT / 2) - (var->wall_stripe_height / 2);
+	var->wall_top_pixel = var->wall_top_pixel < 0 ? 0 : var->wall_top_pixel;
+	var->wall_bottom_pixel = (HEIGHT / 2) + (var->wall_stripe_height / 2);
+	var->wall_bottom_pixel = var->wall_bottom_pixel > HEIGHT ? HEIGHT : var->wall_bottom_pixel;
+	color_top(var, x);
+	get_offset_x(var);
+	y = var->wall_top_pixel;
+	// printf("%f\n", (var->wall_stripe_height / 2) - (HEIGHT / 2));
+	// exit(0);
+	while (y < var->wall_bottom_pixel)
 	{
-		distance_from_top = y + (wall_stripe_height / 2) - (HEIGHT / 2);
-		texture_offset_y = distance_from_top * (float)(var->texture->height) / wall_stripe_height; 
-		pix = (var->texture->width * texture_offset_y + texture_offset_x) * var->texture->bytes_per_pixel;
-		//color = get_color(var, pix);
+		distance_from_top = y + (var->wall_stripe_height / 2) - (HEIGHT / 2);
+		var->texture_offset_y = distance_from_top * (float)(var->texture->height) / var->wall_stripe_height; 
+		pix = (var->texture->width * var->texture_offset_y + var->texture_offset_x) * var->texture->bytes_per_pixel;
 		mlx_put_pixel(var->img, x, y, get_color(var, pix));
 		y++;
 	}
-	// exit(0);
-	//mlx_put_pixel(var->img, x, y, ft_pixel(215, 138, 118, 255));
+	color_bottom(var, x);
 }
