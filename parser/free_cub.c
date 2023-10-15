@@ -6,7 +6,7 @@
 /*   By: oakerkao <oakerkao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/14 09:55:25 by asekkak           #+#    #+#             */
-/*   Updated: 2023/10/14 12:39:12 by oakerkao         ###   ########.fr       */
+/*   Updated: 2023/10/15 10:03:11 by oakerkao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	free_cub(t_parser *parser, int i)
 
 void	part_error(void)
 {
-	
+	free_cub(parser, 1);
 	printf("Error\n");
 	exit(0);
 }

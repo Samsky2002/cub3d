@@ -2,7 +2,7 @@ CC = cc
 
 NAME = cub3D
 
-CFLAGS =  -O3 -g -fsanitize=address #-Wall -Werror -Wextra 
+CFLAGS =  -Wall -Werror -Wextra 
 
 PARSER = parser/map.c \
  		 parser/parser.c \
@@ -17,17 +17,18 @@ PARSER = parser/map.c \
 		 parser/colors.c
 
 ENGINE = engine/cub3d_utils.c \
-		 engine/get_map.c \
+		 engine/ray_view.c \
 		 engine/map_check.c \
 		 engine/get_x_y.c \
 		 engine/drawing.c \
 		 engine/drawing_utils.c \
-		 engine/dda.c \
 		 engine/ray_casting.c \
 		 engine/ray_casting_utils.c \
 		 engine/ray_utils.c \
 		 engine/render.c \
 		 engine/textures.c \
+		 engine/render_utils.c
+		 #engine/dda.c \
 
 CFILES = main.c \
 		 $(ENGINE) \

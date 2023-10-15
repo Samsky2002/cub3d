@@ -6,7 +6,7 @@
 /*   By: oakerkao <oakerkao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/29 11:57:07 by oakerkao          #+#    #+#             */
-/*   Updated: 2023/10/12 19:02:02 by oakerkao         ###   ########.fr       */
+/*   Updated: 2023/10/14 18:55:42 by oakerkao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,12 @@ void	ray_cast_vertical(t_var *var, double angle)
 	var->found_vert = 0;
 	var->vert_wall_hit_x = 0;
 	var->vert_wall_hit_y = 0;
-	init_ray_cast_vars(var);	
-	//x and y intersec
+	init_ray_cast_vars(var);
 	var->x_intersec = floor(var->player_x / SIZE) * SIZE;
 	if (var->right)
 		var->x_intersec += SIZE;
-	var->y_intersec = var->player_y + (var->x_intersec - var->player_x) * tan(angle);
-	// x and y step
+	var->y_intersec = var->player_y + \
+				(var->x_intersec - var->player_x) * tan(angle);
 	var->x_step = SIZE;
 	if (var->left)
 		var->x_step *= -1;
@@ -44,7 +43,6 @@ void	ray_cast_vertical(t_var *var, double angle)
 		var->y_step *= -1;
 	else if (var->down && var->y_step < 0)
 		var->y_step *= -1;
-	// next_x and next_y
 	var->next_x = var->x_intersec;
 	var->next_y = var->y_intersec;
 	get_vert_intersec(var);
@@ -56,12 +54,11 @@ void	ray_cast_horizontal(t_var *var, double angle)
 	var->horiz_wall_hit_x = 0;
 	var->horiz_wall_hit_y = 0;
 	init_ray_cast_vars(var);
-	// y and x intersec
 	var->y_intersec = floor(var->player_y / SIZE) * SIZE;
 	if (var->down)
 		var->y_intersec += SIZE;
-	var->x_intersec = var->player_x + (var->y_intersec - var->player_y) / tan(angle);
-	// y and x step 
+	var->x_intersec = var->player_x + \
+				(var->y_intersec - var->player_y) / tan(angle);
 	var->y_step = SIZE;
 	if (var->up)
 		var->y_step *= -1;
@@ -70,7 +67,6 @@ void	ray_cast_horizontal(t_var *var, double angle)
 		var->x_step *= -1;
 	else if (var->right && var->x_step < 0)
 		var->x_step *= -1;
-	// next_x and next_y
 	var->next_x = var->x_intersec;
 	var->next_y = var->y_intersec;
 	get_horiz_intersec(var);
@@ -84,7 +80,6 @@ void	ray_cast(t_var	*var, double angle)
 	get_distance(var);
 	get_final_info(var);
 	get_texture(var);
-	//DDA(var, var->player_x, var->player_y, var->ray->wall_hit_x, var->ray->wall_hit_y, ft_pixel(243, 202, 64, 255));
 }
 
 void	cast_all_rays(t_var *var)
@@ -101,5 +96,5 @@ void	cast_all_rays(t_var *var)
 		render(var, i, angle);
 		angle += (FOV / WIDTH);
 		i++;
-	 }
+	}
 }

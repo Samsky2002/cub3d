@@ -13,14 +13,14 @@ typedef struct s_color_c
     int c1;
     int c2;
     int c3;
-} t_color_c;
+}	t_color_c;
 
 typedef struct s_color_f
 {
     int f1;
     int f2;
     int f3;
-} t_color_f;
+}	t_color_f;
 
 typedef struct s_parser
 {
@@ -43,7 +43,7 @@ typedef struct s_parser
     int count_no;
     int incr;
     int count_player;
-} t_parser;
+}	t_parser;
 
 // int map(t_parser *parser, int fd);
 int check_file(char *str);

@@ -6,58 +6,52 @@
 /*   By: oakerkao <oakerkao@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/29 11:59:57 by oakerkao          #+#    #+#             */
-/*   Updated: 2023/09/29 12:00:23 by oakerkao         ###   ########.fr       */
+/*   Updated: 2023/10/14 18:12:41 by oakerkao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int	get_x(t_list *lst)
+int	get_x(t_var *var)
 {
 	int		i;
 	int		j;
-	char	*str;
-	int		len;
+	char	**map;
 
 	i = 0;
-	len = ft_lstsize(lst);
-	while (i < len)
+	map = var->parser.map;
+	while (map[i])
 	{
 		j = 0;
-		str = lst->content;
-		while (str[j])
+		while (map[i][j])
 		{
-			if (str[j] == 'N')
-				return (j + 1);
+			if (map[i][j] == var->parser.player)
+				return (j);
 			j++;
 		}
 		i++;
-		lst = lst->next;
 	}
 	return (0);
 }
 
-int	get_y(t_list *lst)
+int	get_y(t_var *var)
 {
 	int		i;
 	int		j;
-	char	*str;
-	int		len;
+	char	**map;
 
-	len = ft_lstsize(lst);
 	i = 0;
-	while (i < len)
+	map = var->parser.map;
+	while (map[i])
 	{
 		j = 0;
-		str = lst->content;
-		while (str[j])
+		while (map[i][j])
 		{
-			if (str[j] == 'N')
-				return (i + 1);
+			if (map[i][j] == var->parser.player)
+				return (i);
 			j++;
 		}
 		i++;
-		lst = lst->next;
 	}
 	return (0);
 }

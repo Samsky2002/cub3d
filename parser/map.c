@@ -6,7 +6,7 @@
 /*   By: oakerkao <oakerkao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/14 09:58:30 by asekkak           #+#    #+#             */
-/*   Updated: 2023/10/14 12:39:12 by oakerkao         ###   ########.fr       */
+/*   Updated: 2023/10/14 19:58:00 by oakerkao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ void	check_map(t_parser *parser)
 {
 	int		i;
 	int		j;
-	char	**map;
 
 	i = 0;
 	check_last_first_line(parser);

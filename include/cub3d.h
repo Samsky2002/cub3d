@@ -6,7 +6,7 @@
 /*   By: oakerkao <oakerkao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 10:47:49 by oakerkao          #+#    #+#             */
-/*   Updated: 2023/10/14 12:45:13 by oakerkao         ###   ########.fr       */
+/*   Updated: 2023/10/14 20:41:14 by oakerkao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,44 +23,44 @@
 # define SIZE 100 
 # define HEIGHT 748
 # define WIDTH 1024 
-# define FOV 60 * (M_PI / 180)
+# define FOV 1.047198 
 
 typedef struct s_color_c
 {
-    int c1;
-    int c2;
-    int c3;
-} t_color_c;
+	int	c1;
+	int	c2;
+	int	c3;
+}	t_color_c;
 
 typedef struct s_color_f
 {
-    int f1;
-    int f2;
-    int f3;
-} t_color_f;
+	int	f1;
+	int	f2;
+	int	f3;
+}	t_color_f;
 
 typedef struct s_parser
 {
-    t_list  *list;
-    t_list  *file;
-    char **map;
-    char *no;
-    char *so;
-    char *we;
-    char *ea;
-    int error;
-    t_color_c ccolor;
-    t_color_f fcolor;
-    int len_map;
-    char player;
-    int count;
-    int count_we;
-    int count_so;
-    int count_ea;
-    int count_no;
-    int incr;
-    int count_player;
-} t_parser;
+	t_list		*list;
+	t_list		*file;
+	char		**map;
+	char		*no;
+	char		*so;
+	char		*we;
+	char		*ea;
+	int			error;
+	t_color_c	ccolor;
+	t_color_f	fcolor;
+	int			len_map;
+	char		player;
+	int			count;
+	int			count_we;
+	int			count_so;
+	int			count_ea;
+	int			count_no;
+	int			incr;
+	int			count_player;
+}	t_parser;
 
 typedef struct s_ray
 {
@@ -71,6 +71,7 @@ typedef struct s_ray
 	int			was_horiz;
 }	t_ray;
 
+// check unused vars and functions
 typedef struct s_var
 {
 	mlx_t			*mlx;
@@ -81,12 +82,7 @@ typedef struct s_var
 	mlx_texture_t	*east;
 	mlx_texture_t	*west;
 	t_ray			*ray;
-	t_list			*lst;
 	t_parser		parser;
-	char			**map;
-	double			fov;
-	int				test_x;
-	int				test_y;
 	double			player_x;
 	double			player_y;
 	int				size;
@@ -94,7 +90,6 @@ typedef struct s_var
 	double			angle;
 	int				map_width;
 	int				map_height;
-	uint32_t		*list;
 	int				up;
 	int				down;
 	int				left;
@@ -123,15 +118,19 @@ typedef struct s_var
 	float			distance_proj_plane;
 	float			projected_wall_height;
 	float			wall_stripe_height;
+	int				pix;
 }	t_var;
 
+// render_utils
+void		get_top_bottom_pixel(t_var *var);
+
 // main
-void		init_var(t_var	*var, char *file);
+void		init_var(t_var	*var);
 uint32_t	rgba_to_color(uint8_t red, uint8_t green, \
 		uint8_t blue, uint8_t alpha);
-
-//dda
-void		DDA(t_var *var, int X0, int Y0, int X1, int Y1, int color);
+int			twod_size(char **arr);
+void		free_twod_array(char **arr);
+void		cleaning(t_var *var);
 
 // drawing
 void		my_keyhook(void *param);
@@ -141,13 +140,14 @@ void		draw_line(t_var *var);
 void		draw_map(t_list *lst, mlx_image_t *img, t_var *var);
 void		draw_player(t_list *lst, mlx_image_t *img, t_var *var);
 int32_t		ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a);
+void		clear_map(t_var *var);
 
 // get_map
 t_list		*put_map(char *file);
 
 // get_x_y
-int			get_x(t_list *lst);
-int			get_y(t_list *lst);
+int			get_x(t_var *var);
+int			get_y(t_var *var);
 
 // map_check
 int			check_player_on_wall(t_var *var, double x, double y);
@@ -179,34 +179,34 @@ void		render(t_var *var, int x, double angle);
 // textures
 void		get_textures(t_var *var);
 // oussama
-void	keyhook_utils(t_var *var);
+void		keyhook_utils(t_var *var);
 
-int check_file(char *str);
-void line_by_line(char *file, t_parser *parser);
-void map(t_parser *parser);
-void check_tab(t_parser *parser);
-void free_cub(t_parser *parser,int i);
-void initialize_value(t_parser *parser);
-void part_error();
-int check_file(char *str);
-int check_extension(char *str);
-void check_color_and_floor_digit(t_parser *parser);
-int check_wall(char *str);
-void check_another_chara(char *str);
-void check_file_line(t_parser *parser);
-void check_char(char *str, t_parser *parser);
-char *take_path(t_parser *parser, char *str);
-void check_rep_path(t_parser *parser);
-void take_color(t_parser *parser, char *str, char c);
-void take_string_color(t_parser *parser, char *str, char c);
-void char_to_int(t_parser *parser, char *str, char c, int j);
-void cieling_struct(t_parser *parser, char *str, char c, int j);
-void take_string_color(t_parser *parser, char *str, char c);
-void	take_color(t_parser *parser, char *str, char c);
-void	check_last_first_line(t_parser *parser);
-int	check_if_wall(char *str);
-int	check_char_map(char *str, t_parser *parser);
-void	parser(char *file, t_var *var);
-char    **put_twod_array(t_list *lst);
-char	*char_join(char *str, char c);
+int			check_file(char *str);
+void		line_by_line(char *file, t_parser *parser);
+void		map(t_parser *parser);
+void		check_tab(t_parser *parser);
+void		free_cub(t_parser *parser, int i);
+void		initialize_value(t_parser *parser);
+void		part_error(void);
+int			check_file(char *str);
+int			check_extension(char *str);
+void		check_color_and_floor_digit(t_parser *parser);
+int			check_wall(char *str);
+void		check_another_chara(char *str);
+void		check_file_line(t_parser *parser);
+void		check_char(char *str, t_parser *parser);
+char		*take_path(t_parser *parser, char *str);
+void		check_rep_path(t_parser *parser);
+void		take_color(t_parser *parser, char *str, char c);
+void		take_string_color(t_parser *parser, char *str, char c);
+void		char_to_int(t_parser *parser, char *str, char c, int j);
+void		cieling_struct(t_parser *parser, char *str, int j);
+void		take_string_color(t_parser *parser, char *str, char c);
+void		take_color(t_parser *parser, char *str, char c);
+void		check_last_first_line(t_parser *parser);
+int			check_if_wall(char *str);
+int			check_char_map(char *str, t_parser *parser);
+void		parser(char *file, t_var *var);
+char		**put_twod_array(t_list *lst);
+char		*char_join(char *str, char c);
 #endif

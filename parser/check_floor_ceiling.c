@@ -6,28 +6,26 @@
 /*   By: oakerkao <oakerkao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/14 09:46:20 by asekkak           #+#    #+#             */
-/*   Updated: 2023/10/14 12:39:12 by oakerkao         ###   ########.fr       */
+/*   Updated: 2023/10/14 20:00:01 by oakerkao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	part_check_color_and_floor_digit(int i, t_parser *parser)
+void	part_check_color_and_floor_digit(int i)
 {
 	if (i < 0 || i > 255)
-	{
 		part_error();
-	}
 }
 
 void	check_color_and_floor_digit(t_parser *parser)
 {
-	part_check_color_and_floor_digit(parser->ccolor.c1, parser);
-	part_check_color_and_floor_digit(parser->ccolor.c2, parser);
-	part_check_color_and_floor_digit(parser->ccolor.c3, parser);
-	part_check_color_and_floor_digit(parser->fcolor.f1, parser);
-	part_check_color_and_floor_digit(parser->fcolor.f2, parser);
-	part_check_color_and_floor_digit(parser->fcolor.f3, parser);
+	part_check_color_and_floor_digit(parser->ccolor.c1);
+	part_check_color_and_floor_digit(parser->ccolor.c2);
+	part_check_color_and_floor_digit(parser->ccolor.c3);
+	part_check_color_and_floor_digit(parser->fcolor.f1);
+	part_check_color_and_floor_digit(parser->fcolor.f2);
+	part_check_color_and_floor_digit(parser->fcolor.f3);
 }
 
 int	check_wall(char *str)

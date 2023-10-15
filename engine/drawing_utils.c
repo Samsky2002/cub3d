@@ -6,13 +6,13 @@
 /*   By: oakerkao <oakerkao@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/29 11:58:05 by oakerkao          #+#    #+#             */
-/*   Updated: 2023/10/10 14:38:27 by oakerkao         ###   ########.fr       */
+/*   Updated: 2023/10/14 18:51:43 by oakerkao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	draw_map(t_list *lst, mlx_image_t *img, t_var *var)
+/*void	draw_map(t_list *lst, mlx_image_t *img, t_var *var)
 {
 	char	*str;
 	int		i;
@@ -20,14 +20,15 @@ void	draw_map(t_list *lst, mlx_image_t *img, t_var *var)
 	int		a;
 	int		b;
 	t_list	*tmp;
+	char	**arr;
 
 	i = 0;
 	tmp = lst;
-	while (i < ft_lstsize(tmp))
+	arr = var->parser.map;
+	while (arr[i])
 	{
-		str = lst->content;
 		j = 0;
-		while (str[j])
+		while (arr[i][j])
 		{
 			a = i * SIZE;
 			while (a < (SIZE * i) + SIZE)
@@ -35,9 +36,9 @@ void	draw_map(t_list *lst, mlx_image_t *img, t_var *var)
 				b = j * SIZE;
 				while (b < (SIZE * j) + SIZE)
 				{
-					if (str[j] == '1')
+					if (arr[i][j] == '1')
 						mlx_put_pixel(img, b, a, 0xFFFFFF);
-					else if (str[j] == '0' || str[j] == 'N')
+					else if (arr[i][j] == '0' || arr[i][j] == 'N')
 						mlx_put_pixel(img, b, a, 0x000000);
 					b++;
 				}
@@ -58,9 +59,27 @@ void	draw_player(t_list *lst, mlx_image_t *img, t_var *var)
 	i = var->player_x;
 	j = var->player_y;
 	mlx_put_pixel(img, i, j, 0xFFFFFF);
+}*/
+
+int32_t	ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a)
+{
+	return (r << 24 | g << 16 | b << 8 | a);
 }
 
-int32_t ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a)
+void	clear_map(t_var *var)
 {
-    return (r << 24 | g << 16 | b << 8 | a);
+	int	i;
+	int	j;
+
+	i = 0;
+	while (i < HEIGHT)
+	{
+		j = 0;
+		while (j < WIDTH)
+		{
+			mlx_put_pixel(var->img, j, i, 0x000000);
+			j++;
+		}
+		i++;
+	}
 }

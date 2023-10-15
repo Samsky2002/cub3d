@@ -6,13 +6,13 @@
 /*   By: oakerkao <oakerkao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/14 09:49:53 by asekkak           #+#    #+#             */
-/*   Updated: 2023/10/14 12:39:12 by oakerkao         ###   ########.fr       */
+/*   Updated: 2023/10/14 20:01:24 by oakerkao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	floor_struct(t_parser *parser, char *str, char c, int j)
+void	floor_struct(t_parser *parser, char *str, int j)
 {
 	if (j == 0)
 		parser->fcolor.f1 = ft_atoi(str);
@@ -22,7 +22,7 @@ void	floor_struct(t_parser *parser, char *str, char c, int j)
 		parser->fcolor.f3 = ft_atoi(str);
 }
 
-void	cieling_struct(t_parser *parser, char *str, char c, int j)
+void	cieling_struct(t_parser *parser, char *str, int j)
 {
 	if (j == 0)
 		parser->ccolor.c1 = ft_atoi(str);
@@ -42,9 +42,9 @@ void	char_to_int(t_parser *parser, char *str, char c, int j)
 	if (!(str[i] <= '9' && str[i] >= '0'))
 		part_error();
 	if (c == 'f')
-		floor_struct(parser, str + i, c, j);
+		floor_struct(parser, str + i, j);
 	if (c == 'c')
-		cieling_struct(parser, str + i, c, j);
+		cieling_struct(parser, str + i, j);
 }
 
 void	take_string_color(t_parser *parser, char *str, char c)
